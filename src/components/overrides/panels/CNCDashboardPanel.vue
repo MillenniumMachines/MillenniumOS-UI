@@ -6,8 +6,8 @@
 
 <template>
     <v-row>
-        <v-col cols="12" class="pt-0 pb-0">
-            <cnc-movement-panel class="mb-2" />
+        <v-col cols="12" class="pt-0 pb-0" key="124">
+            <cnc-movement-panel v-if="true" class="mb-2" />
         </v-col>
         <v-col cols="12" md="9">
             <v-row dense>
@@ -47,5 +47,6 @@ import { defineComponent } from 'vue';
 
 export default defineComponent({
     extends: BaseComponent,
+    computed: {}
 });
 </script>

@@ -3,6 +3,10 @@ on:
     tags:
       - 'v*'
 
+env:
+  DWC_VERSION: ${{ inputs.dwc_version || 'v3.5.3' }}
+  VERSION: ${{ github.ref_name }}
+
 name: Build MillenniumOS UI for Release
 jobs:
   build-and-release:
@@ -16,8 +20,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: Duet3D/DuetWebControl
-          # ref: v3.6.0-beta.1
-          ref: v3.5.3
+          ref: ${{ env.DWC_VERSION }}
 
       - name: Checkout code
         uses: actions/checkout@v4
@@ -31,8 +34,12 @@ jobs:
       - name: Release
         uses: softprops/action-gh-release@v2
         with:
-          name: MillenniumOS UI ${{ github.ref_name }}
+          name: MillenniumOS UI ${{ env.VERSION }}
           draft: true
+          body: |
+            This release of MillenniumOS UI is built for Duet Web Control ${{ env.DWC_VERSION }}.
+            it will not work with other versions of Duet Web Control! Make sure you're running
+            the correct version of DWC before installing this release.
           generate_release_notes: true
           fail_on_unmatched_files: true
           files: |
