@@ -331,7 +331,15 @@ export default Vue.extend({
             	return log(LogType.error, "Protected Move Error", `Probe ${this.protectedMoveProbeID} is not configured!`);
 			}
 
-			if(probe.value[0] >= probe.threshold) {
+			// We allow the Z axis to move in a positive direction
+			// if the probe is triggered because there should be
+			// no obstructions above the probe.
+			if(axis.letter === AxisLetter.Z && !decrementing) {
+				return await this.sendCode(`M120\nG91\nG1 F${probe.travelSpeed} ${/[a-z]/.test(axis.letter) ? '\'' : ""}${axis.letter}${distance}\nM121`);
+			}
+
+			// Do not allow probe to move if already triggered.
+			if(probe.value[0] >= probe.threshold)  {
 				return log(LogType.error, "Protected Move Error", `Probe ${this.protectedMoveProbeID} is already triggered!`);
 			}
 
