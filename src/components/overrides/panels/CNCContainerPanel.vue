@@ -166,7 +166,6 @@ export default defineComponent({
 		visibleAxes(): Array<Axis> {
 			return store.state.machine.model.move.axes.filter(axis => axis.visible);
 		},
-		currentWorkplace(): number { return store.state.machine.model.move.workplaceNumber; },
 		touchProbeEnabled(): boolean {
 			return (
 				store.state.machine.model.global.get('mosFeatTouchProbe') === true &&

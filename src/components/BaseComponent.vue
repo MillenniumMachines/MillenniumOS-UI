@@ -21,8 +21,20 @@
                 const toolIndex = store.state.machine.model.state.currentTool;
                 return toolIndex < 0 ? null : store.state.machine.model.tools[toolIndex];
             },
-            currentWorkplace(): number {
-                return store.state.machine.model.move.workplaceNumber;
+            probeTool(): Tool | null {
+                const ptID = store.state.machine.model.global.get("mosPTID") ?? -1;
+                if (ptID < 0 || (ptID >= (store.state.machine.model.limits?.tools ?? 0))) {
+                    return null;
+                }
+                return store.state.machine.model.tools[ptID];
+            },
+            currentWorkplace: {
+                get(): number {
+                    return this.currentWorkplaceNumber;
+                },
+                set(value: number) {
+                    this.currentWorkplaceNumber = value;
+                }
             },
             absolutePosition(): { [key in AxisLetter]: number } {
                 const axes = this.visibleAxesByLetter;
@@ -37,7 +49,12 @@
             },
         },
         data() {
-            return {}
+            return {
+                currentWorkplaceNumber: -1,
+            }
+        },
+        mounted() {
+            this.currentWorkplaceNumber = store.state.machine.model.move.workplaceNumber;
         },
         methods: {}
     });

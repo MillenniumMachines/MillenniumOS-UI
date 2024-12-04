@@ -77,6 +77,7 @@ export type ProbeSetting = {
     icon?: string;
     min?: number;
     max?: number;
+    multiplier?: number;
     step?: number;
     unit?: string;
     options?: OptionOrString[];
@@ -102,7 +103,29 @@ export type ProbeSettingEnum = ProbeSetting & {
 export type ProbeSettingAll = ProbeSettingBoolean | ProbeSettingNumber | ProbeSettingEnum;
 
 export type ProbeSettings = {
-    [key: string]: ProbeSettingBoolean | ProbeSettingNumber | ProbeSettingEnum;
+    [key: string]: ProbeSettingAll;
+}
+
+// If a ProbeSettingModifier is provided to
+// ProbeCommand.toGCode(), the operator-provided
+// value will be used as a modifier on the value
+// provided in the modifier rather than the static
+// value in the setting.
+// This allows for things like 'depth' settings to
+// output an absolute co-ordinate based on the current
+// position, supplied as a modifier.
+export type ProbeSettingNumberModifier = {
+    numberValue: number;
+}
+
+export type ProbeSettingModifier = ProbeSettingNumberModifier;
+
+export function isNumberModifier(mod: ProbeSettingModifier): mod is ProbeSettingNumberModifier {
+    return mod.numberValue !== undefined;
+}
+
+export type ProbeSettingsModifier = {
+    [key: string]: ProbeSettingModifier;
 }
 
 export interface IProbeCommand {
@@ -110,16 +133,16 @@ export interface IProbeCommand {
     settings: ProbeSettings,
     addSetting: (id: string, setting: ProbeSettingAll) => void;
     addSettings: (settings: ProbeSettings) => void;
-    getGCode: () => string;
+    toGCode: (mods: ProbeSettingsModifier | null) => string;
 }
 
 export class ProbeCommand implements IProbeCommand {
     command: number;
     settings: ProbeSettings;
 
-    constructor(command: number) {
+    constructor(command: number, settings: ProbeSettings | null) {
         this.command = command;
-        this.settings = {};
+        this.settings = (settings) ? settings : {};
     }
 
     addSetting(id: string, setting: ProbeSettingAll) {
@@ -130,15 +153,30 @@ export class ProbeCommand implements IProbeCommand {
         this.settings = settings;
     }
 
-    getGCode(): string {
-        const gcode: string[] = [this.command.toString()];
+    toGCode(mods: ProbeSettingsModifier | null): string {
+        const gcode: string[] = [`G${this.command.toString()}`];
         for (const key in this.settings) {
             const setting = this.settings[key];
 
+            // Dont include settings without a parameter
+            if (setting.parameter === undefined) {
+                continue;
+            }
+
+            const p = setting.parameter;
+            const v = setting.value;
+            const m = setting.multiplier ? setting.multiplier : 1;
+
             if (isBooleanSetting(setting)) {
-                gcode.push(`${setting.parameter}${setting.value ? 1 : 0}`);
-            } else if (isNumberSetting(setting) || isEnumSetting(setting)) {
-                gcode.push(`${setting.parameter}${setting.value}`);
+                gcode.push(`${p}${v ? 1 : 0}`);
+            } else if (isNumberSetting(setting)) {
+                if (mods && p in mods && isNumberModifier(mods[p])) {
+                    gcode.push(`${p}${((v as number) * m) + mods[p].numberValue}`);
+                } else {
+                    gcode.push(`${p}${v}`);
+                }
+            } else if (isEnumSetting(setting)) {
+                gcode.push(`${p}${v}`);
             }
         }
         return gcode.join(' ');
@@ -195,9 +233,10 @@ export default {
                 description: 'How far to move down from the starting position before probing.',
                 parameter: 'Z',
                 icon: 'mdi-arrow-down-bold-circle',
-                value: 0,
+                value: 5,
                 min: 0,
-                max: 100,
+                max: 20,
+                multiplier: -1,
                 step: 0.1,
                 unit: 'mm'
             },
@@ -228,9 +267,10 @@ export default {
                 description: 'How far to move down from the starting position before probing.',
                 parameter: 'Z',
                 icon: 'mdi-arrow-down-bold-circle',
-                value: 0,
+                value: 5,
                 min: 0,
-                max: 100,
+                max: 20,
+                multiplier: -1,
                 step: 0.1,
                 unit: 'mm'
             },
@@ -243,7 +283,6 @@ export default {
         icon: 'mdi-rectangle-outline',
         description: 'Finds the center of a rectangular pocket (negative feature) by probing its inner surfaces.',
         code: 6502.1,
-        // G6502.1 W{var.workOffset} H{var.pocketWidth} I{var.pocketLength} T{var.surfaceClearance} C{var.cornerClearance} O{var.overtravel} J{global.mosMI[0]} K{global.mosMI[1]} L{global.mosMI[2] - var.probingDepth}
         settings: {
             'width': {
                 type: 'number',
@@ -275,9 +314,10 @@ export default {
                 description: 'How far to move down from the starting position before probing.',
                 parameter: 'Z',
                 icon: 'mdi-arrow-down-bold-circle',
-                value: 0,
+                value: 5,
                 min: 0,
-                max: 100,
+                max: 20,
+                multiplier: -1,
                 step: 0.1,
                 unit: 'mm'
             },
@@ -324,7 +364,8 @@ export default {
                 icon: 'mdi-arrow-down-bold-circle',
                 value: 5,
                 min: 0,
-                max: 100,
+                max: 20,
+                multiplier: -1,
                 step: 0.1,
                 unit: 'mm'
             },
@@ -408,9 +449,10 @@ export default {
                 description: 'How far to move down from the starting position before probing.',
                 parameter: 'Z',
                 icon: 'mdi-arrow-down-bold-circle',
-                value: 0,
+                value: 5,
                 min: 0,
-                max: 100,
+                max: 20,
+                multiplier: -1,
                 step: 0.1,
                 unit: 'mm'
             },
@@ -464,6 +506,7 @@ export default {
                 label: 'Width',
                 description: 'The approximate length of the X surface of the corner.',
                 icon: 'mdi-unfold-more-vertical',
+                parameter: 'H',
                 value: 10,
                 min: 0,
                 max: 300,
@@ -477,6 +520,7 @@ export default {
                 label: 'Length',
                 description: 'The approximate length of the Y surface of the corner.',
                 icon: 'mdi-unfold-more-horizontal',
+                parameter: 'I',
                 value: 10,
                 min: 0,
                 max: 300,
@@ -491,9 +535,9 @@ export default {
                 description: 'How far to move down from the top surface of the corner before probing the sides.',
                 parameter: 'P',
                 icon: 'mdi-arrow-down-bold-circle',
-                value: 2,
+                value: 5,
                 min: 0,
-                max: 100,
+                max: 20,
                 step: 0.1,
                 unit: 'mm'
             },
@@ -543,6 +587,7 @@ export default {
                 label: 'Distance',
                 description: 'The approximate distance to move towards the target surface.',
                 icon: 'mdi-ruler',
+                parameter: 'I',
                 value: 10,
                 min: 1,
                 max: 100,

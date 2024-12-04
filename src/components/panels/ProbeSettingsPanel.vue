@@ -14,6 +14,7 @@
                                 <v-row v-if="isNumberSetting(setting)">
                                     <v-col cols="8" md="10">
                                         <v-slider
+                                            class="mt-4"
                                             v-model="setting.value"
                                             :min="setting.min"
                                             :max="setting.max"
@@ -29,6 +30,7 @@
                                     </v-col>
                                     <v-col cols="4" md="2">
                                         <v-text-field
+                                            class="pt-0 mt-0"
                                             v-model="setting.value"
                                             :suffix = "setting.unit"
                                             @input="setting.value = $event"
@@ -44,16 +46,16 @@
                                             :prepend-icon="setting.icon"
                                             :disabled="!allowInput(name)"
                                             persistent-hint
+                                            class="mt-0"
                                         >
                                         </v-switch>
                                     </v-col>
-                                    <v-col cols="4" md="2">
+                                    <v-col cols="4" md="2" class="text-right">
                                         <v-tooltip top>
                                             <template v-slot:activator="{ on, attrs }">
                                                 <v-chip
                                                     :color="setting.value ? 'primary' : 'secondary'"
                                                     label
-                                                    class="mt-6"
                                                     v-on="on"
                                                 >
                                                     <v-icon
@@ -68,7 +70,7 @@
                                     </v-col>
                                 </v-row>
                                 <v-row v-else-if="isEnumSetting(setting)">
-                                    <v-col cols="8" md="12">
+                                    <v-col cols="8" md="10">
                                         <v-input
                                             :prepend-icon="setting.icon"
                                         >
@@ -77,7 +79,7 @@
                                                     mandatory
                                                     class="ml-4"
                                                     >
-                                                <v-tooltip v-for="(option, i) in setting.options" :key="index" top>
+                                                <v-tooltip v-for="(option, i) in setting.options" :key="i" top>
                                                     <template v-slot:activator="{ on, attrs }">
                                                         <v-btn
                                                             v-on="on"
@@ -95,6 +97,24 @@
                                                 </v-tooltip>
                                             </v-btn-toggle>
                                         </v-input>
+                                    </v-col>
+                                    <v-col cols="4" md="2" class="text-right">
+                                        <v-tooltip top>
+                                            <template v-slot:activator="{ on, attrs }">
+                                                <v-chip
+                                                    :color="getEnumColor(setting.value, setting.value)"
+                                                    label
+                                                    v-on="on"
+                                                >
+                                                    <v-icon
+                                                        v-on="on"
+                                                    >
+                                                        {{ getEnumIcon(setting.options[setting.value]) }}
+                                                    </v-icon>
+                                                </v-chip>
+                                            </template>
+                                            {{ getEnumText(setting.options[setting.value]) }}
+                                        </v-tooltip>
                                     </v-col>
                                 </v-row>
                             </v-col>
@@ -187,9 +207,7 @@
                 return 'mdi-border-radius';
             },
             updateProbeSettings() {
-                if(this.value !== null) {
-                    this.value.addSettings(this.probeType.settings);
-                }
+                this.$emit('change');
             },
         }
     });

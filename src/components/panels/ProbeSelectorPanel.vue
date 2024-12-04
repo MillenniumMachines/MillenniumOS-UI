@@ -47,6 +47,10 @@
 <script lang="ts">
     import BaseComponent from "../BaseComponent.vue";
 
+    import { defineComponent, PropType } from 'vue';
+
+    import { ProbeTypes } from "../../types/Probe";
+
     import store from "@/store";
 
     interface Data {
@@ -54,18 +58,16 @@
         expandedTypeDetails: number[];
     }
 
-    import { defineComponent } from 'vue';
-
     export default defineComponent({
         extends: BaseComponent,
 
         props: {
             value: {
-                type: Number,
+                type: String,
                 required: false
             },
             probeTypes: {
-                type: Object,
+                type: Object as PropType<ProbeTypes>,
                 required: true
             },
         },
@@ -76,7 +78,7 @@
             mustExpandProbeDetails(): boolean {
                  return this.$vuetify.breakpoint.mdAndDown;
             },
-            allProbeTypes(): any {
+            allProbeTypes(): ProbeTypes {
                 return this.$props.probeTypes;
             }
         },
@@ -102,7 +104,7 @@
             },
             selectProbeType(index: number) {
                 this.selectedProbeId = index;
-                this.$emit('input', index);
+                this.$emit('change', index);
             }
         }
     });
