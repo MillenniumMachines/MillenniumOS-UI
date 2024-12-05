@@ -6,8 +6,8 @@ import { registerPluginData, PluginDataType } from '@/store';
 
 import './utils';
 
-import './components/panels';
 import './components/inputs';
+import './components/panels';
 import './components/overrides';
 
 import Dash from './MillenniumOS.vue'

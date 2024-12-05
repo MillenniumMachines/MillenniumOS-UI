@@ -119,6 +119,20 @@
                             </v-tab-item>
                             <v-tab-item v-if="hasStatus">
                                 <v-progress-linear
+                                    v-if="probeRetryTotal > 1"
+                                    class="mt-4 animate"
+                                    color="warning"
+                                    rounded
+                                    v-model="probeRetryProgress"
+                                    height=25
+                                    style="pointer-events: none"
+                                    striped
+                                    stream
+                                    :buffer-value="probeRetryBuffer"
+                                    >
+                                    <strong>Sample {{ Math.min(probeRetryCurrent+1, probeRetryTotal) }} / {{ probeRetryTotal }}</strong>
+                                </v-progress-linear>
+                                <v-progress-linear
                                     class="mt-4 animate"
                                     color="primary"
                                     rounded
@@ -146,7 +160,6 @@
                                 </v-progress-linear>
                             </v-tab-item>
                         </v-tabs>
-
                     </v-col>
                 </v-row>
             </v-container>
@@ -188,11 +201,17 @@ export default defineComponent({
         },
         hasProbeTypeSelected(): boolean { return this.probeType !== null; },
         hasProbeCommand(): boolean { return this.probeCommand !== null; },
+        probeRetryCurrent(): number {
+            return (store.state.machine.model.global.get("mosPRRS") ?? 0);
+        },
         probePointCurrent(): number {
             return (store.state.machine.model.global.get("mosPRPS") ?? 0);
         },
         probeSurfaceCurrent(): number {
             return (store.state.machine.model.global.get("mosPRSS") ?? 0);
+        },
+        probeRetryBuffer(): number {
+            return Math.min((this.probeRetryCurrent + 1) / this.probeRetryTotal * 100, 100);
         },
         probePointBuffer(): number {
             return Math.min((this.probePointCurrent + 1) / this.probePointTotal * 100, 100);
@@ -200,11 +219,17 @@ export default defineComponent({
         probeSurfaceBuffer(): number {
             return Math.min((this.probeSurfaceCurrent + 1) / this.probeSurfaceTotal * 100, 100);
         },
+        probeRetryTotal(): number {
+            return store.state.machine.model.global.get("mosPRRT") ?? 0;
+        },
         probePointTotal(): number {
             return store.state.machine.model.global.get("mosPRPT") ?? 0;
         },
         probeSurfaceTotal(): number {
             return store.state.machine.model.global.get("mosPRST") ?? 0;
+        },
+        probeRetryProgress(): number {
+            return this.probeRetryCurrent / this.probeRetryTotal * 100;
         },
         probePointProgress(): number {
             return this.probePointCurrent / this.probePointTotal * 100;
@@ -263,6 +288,7 @@ export default defineComponent({
                 `J${this.absolutePosition[AxisLetter.X]}`,
                 `K${this.absolutePosition[AxisLetter.Y]}`,
                 `L${this.absolutePosition[AxisLetter.Z]}`,
+                `R0`, // Do not report probing results
             ];
 
             return gcode.join(" ");
@@ -278,10 +304,9 @@ export default defineComponent({
         },
         async runProbe() {
             this.probing = true;
-            await store.dispatch("machine/sendCode", "set global.mosPRPT=0\nset global.mosPRPS=0\nset global.mosPRST=0\nset global.mosPRSS=0\n");
+            await this.sendCode("M5012");
             this.nextStep();
-            await store.dispatch("machine/sendCode", this.getProbeCode());
-            await store.dispatch("machine/sendCode", "set global.mosPRPT=0\nset global.mosPRPS=0\nset global.mosPRST=0\nset global.mosPRSS=0\n");
+            await this.sendCode([this.getProbeCode(), "M5012"].join("\n"));
         },
     },
     mounted() {
@@ -290,6 +315,11 @@ export default defineComponent({
         }
     },
     watch: {
+        probeActive(newVal: boolean, oldVal: boolean) {
+            if(newVal && this.tab === 0) {
+                this.nextStep();
+            }
+        },
         currentTool(newTool: (Tool | null), oldTool: (Tool | null)) {
             if(!this.probeActive) {
                 this.tab = 0;

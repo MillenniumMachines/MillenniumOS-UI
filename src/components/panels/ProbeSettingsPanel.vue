@@ -53,17 +53,19 @@
                                     <v-col cols="4" md="2" class="text-right">
                                         <v-tooltip top>
                                             <template v-slot:activator="{ on, attrs }">
-                                                <v-chip
+                                                <v-btn
                                                     :color="setting.value ? 'primary' : 'secondary'"
                                                     label
                                                     v-on="on"
+                                                    small
+                                                    style="pointer-events: none"
                                                 >
                                                     <v-icon
                                                         v-on="on"
                                                     >
                                                         {{  setting.value ? 'mdi-check' : 'mdi-close' }}
                                                     </v-icon>
-                                                </v-chip>
+                                                </v-btn>
                                             </template>
                                             {{ setting.value ? $t("plugins.millenniumos.probeSettings.booleanEnabled") : $t("plugins.millenniumos.probeSettings.booleanDisabled") }}
                                         </v-tooltip>
@@ -101,17 +103,19 @@
                                     <v-col cols="4" md="2" class="text-right">
                                         <v-tooltip top>
                                             <template v-slot:activator="{ on, attrs }">
-                                                <v-chip
+                                                <v-btn
                                                     :color="getEnumColor(setting.value, setting.value)"
                                                     label
+                                                    small
                                                     v-on="on"
+                                                    style="pointer-events: none"
                                                 >
                                                     <v-icon
                                                         v-on="on"
                                                     >
                                                         {{ getEnumIcon(setting.options[setting.value]) }}
                                                     </v-icon>
-                                                </v-chip>
+                                                </v-btn>
                                             </template>
                                             {{ getEnumText(setting.options[setting.value]) }}
                                         </v-tooltip>

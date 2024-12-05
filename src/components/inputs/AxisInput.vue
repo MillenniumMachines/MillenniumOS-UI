@@ -7,7 +7,9 @@
         :loading="loading"
         @change="setCoordinate"
         type="number"
+        step="0.001"
         hide-details
+        class="text-body-2 mt-0"
     >
         <template v-slot:append>
             <v-tooltip top
@@ -22,6 +24,7 @@
                         v-bind="attrs"
                         v-on="on"
                         color="error"
+                        class="mt-1"
                         >mdi-alert-box</v-icon>
                 </template>
                 <span>{{ errorMsg }}</span>
@@ -94,7 +97,7 @@
                     return;
                 }
                 this.loading = true;
-                await store.dispatch("machine/sendCode", `G10 L2 P${this.workplaceOffset+1} ${this.axis.letter}${this.pendingValue}`);
+                await this.sendCode(`G10 L2 P${this.workplaceOffset+1} ${this.axis.letter}${this.pendingValue}`);
                 this.loading = false;
             },
         }

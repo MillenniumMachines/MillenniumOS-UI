@@ -28,60 +28,7 @@
 						{{ $t("button.home.captionAll") }}
 					</code-btn>
 				</v-col>
-				<v-col cols="3" order="2" md="4" order-md="2">
-					<v-menu offset-y left :disabled="uiFrozen">
-						<template #activator="{ on }">
-							<v-btn v-show="visibleAxes.length" color="primary" block class="mx-0 move-btn"
-								   :disabled="uiFrozen" v-on="on">
-								{{ $t("panel.movement.compensation") }}
-								<v-icon>mdi-menu-down</v-icon>
-							</v-btn>
-						</template>
-
-						<v-card>
-							<v-list>
-								<div v-show="isCompensationEnabled">
-									<v-list-item>
-										<v-spacer />
-										{{ $t("panel.movement.compensationInUse", [compensationType]) }}
-										<v-spacer />
-									</v-list-item>
-
-									<v-divider />
-								</div>
-
-								<v-list-item @click="sendCode('G32')">
-									<v-icon class="mr-1">mdi-format-vertical-align-center</v-icon>
-									{{ $t(isDelta ? "panel.movement.runDelta" : "panel.movement.runBed") }}
-								</v-list-item>
-								<v-list-item :disabled="!isCompensationEnabled" @click="sendCode('M561')">
-									<v-icon class="mr-1">mdi-border-none</v-icon>
-									{{ $t("panel.movement.disableBedCompensation") }}
-								</v-list-item>
-
-								<v-divider />
-
-								<v-list-item @click="sendCode('G29')">
-									<v-icon class="mr-1">mdi-grid</v-icon>
-									{{ $t("panel.movement.runMesh") }}
-								</v-list-item>
-								<v-list-item @click="showMeshEditDialog = true">
-									<v-icon class="mr-1">mdi-pencil</v-icon>
-									{{ $t("panel.movement.editMesh") }}
-								</v-list-item>
-								<v-list-item @click="sendCode('G29 S1')">
-									<v-icon class="mr-1">mdi-content-save</v-icon>
-									{{ $t("panel.movement.loadMesh") }}
-								</v-list-item>
-								<v-list-item :disabled="!isCompensationEnabled" @click="sendCode('G29 S2')">
-									<v-icon class="mr-1">mdi-grid-off</v-icon>
-									{{ $t("panel.movement.disableMeshCompensation") }}
-								</v-list-item>
-							</v-list>
-						</v-card>
-					</v-menu>
-				</v-col>
-				<v-col cols="3" order="2" md="4" order-md="2">
+				<v-col cols="6" order="2" md="8" order-md="2">
 					<v-menu offset-y left :disabled="uiFrozen">
 						<template #activator="{ on }">
 							<v-btn v-show="visibleAxes.length" :color="isProtectedMovesEnabled ? 'primary' : 'warning'" block class="mx-0 move-btn"

@@ -4,6 +4,8 @@
 
     import { defineComponent } from 'vue'
 
+    import { workplaceAsGCode } from "../utils/display";
+
     import store from "@/store";
 
     export default defineComponent({
@@ -30,10 +32,10 @@
             },
             currentWorkplace: {
                 get(): number {
-                    return this.currentWorkplaceNumber;
+                    return store.state.machine.model.move.workplaceNumber;
                 },
-                set(value: number) {
-                    this.currentWorkplaceNumber = value;
+                async set(value: number) {
+                    await this.sendCode(workplaceAsGCode(value));
                 }
             },
             absolutePosition(): { [key in AxisLetter]: number } {
@@ -49,13 +51,12 @@
             },
         },
         data() {
-            return {
-                currentWorkplaceNumber: -1,
-            }
+            return {}
         },
-        mounted() {
-            this.currentWorkplaceNumber = store.state.machine.model.move.workplaceNumber;
-        },
-        methods: {}
+        methods: {
+            async sendCode(code: string) {
+                await store.dispatch("machine/sendCode", code);
+            },
+        }
     });
 </script>

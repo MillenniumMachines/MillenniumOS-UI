@@ -25,17 +25,14 @@
             </v-col>
         </v-row> -->
         <v-row>
-            <v-col cols="12" class="pb-0">
-                <mos-probing-panel class="mb-2" />
+            <v-col cols="9" class="pb-0">
+                <mos-probing-panel class="mb-2 fill-height" />
             </v-col>
             <v-col cols="3" class="pb-0">
-                <mos-safe-movement-panel class="mb-2" />
+                <mos-workplace-origins-panel class="mb-2 fill-height" />
             </v-col>
         </v-row>
         <v-row>
-            <v-col cols="12" lg="12" class="pb-0">
-                <mos-workplace-origins-panel class="mb-2" />
-            </v-col>
             <!-- <v-col cols="12" lg="6" class="pb-0">
                 <mos-probe-results-panel class="mb-2" />
             </v-col> -->

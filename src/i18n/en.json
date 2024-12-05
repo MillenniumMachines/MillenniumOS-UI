@@ -50,7 +50,7 @@
       "atStop": "Axis {0} endstop is triggered"
     },
     "cncStatus": {
-      "touchProbe": "Probe",
+      "touchProbe": "Touch Probe",
       "toolsetter": "Toolsetter",
       "toolRadius": "Tool Radius",
       "toolOffset": "Tool Offset",

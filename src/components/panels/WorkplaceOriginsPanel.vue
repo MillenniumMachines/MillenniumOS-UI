@@ -5,7 +5,7 @@
     .v-data-table >>> .v-data-table__wrapper > table > thead > tr > th,
     .v-data-table >>> .v-data-table__wrapper > table > tfoot > tr > td,
     .v-data-table >>> .v-data-table__wrapper > table > tfoot > tr > th {
-    padding: 0 4px;
+    padding: 0 2px;
     }
 </style>
 <template>
@@ -21,6 +21,7 @@
                         disable-sort
                         hide-default-footer
                         mobile-breakpoint="0"
+                        class="text-body-2 px-2"
                         :headers="headers"
                         :items="items"
                         :item-class="workplaceItemClass"
@@ -29,10 +30,10 @@
                     >
                         <template v-for="(axis, index) in visibleAxes" v-slot:[`item.${axis.letter}`]="{ item }">
                             <mos-axis-input
-                                :key="index"
+                                :key="index+1"
                                 :axis="axis"
                                 :workplaceOffset="item.offset"
-                            />
+                            ></mos-axis-input>
                         </template>
                         <template v-slot:item.active="{ item }">
                             <v-tooltip top>
@@ -56,9 +57,8 @@
                                 <span>Activate workplace {{ item.workplace }}</span>
                             </v-tooltip>
                         </template>
-
                         <template v-slot:item.actions="{ item }">
-                            <v-container fluid py-1 pl-0>
+                            <v-container fluid py-1 px-1>
                                 <v-row>
                                     <v-col cols="12" lg="12">
                                         <v-tooltip top>
@@ -98,7 +98,6 @@
         extends: BaseComponent,
         props: {},
         computed: {
-            currentWorkplace(): number { return store.state.machine.model.move.workplaceNumber; },
 		    uiFrozen(): boolean { return store.getters["uiFrozen"]; },
 		    allAxesHomed(): boolean { return store.state.machine.model.move.axes.every(axis => axis.visible && axis.homed)},
             visibleAxes(): Array<Axis> {
@@ -160,9 +159,6 @@
                 } else {
                     this.selectedWorkplace = item.offset;
                 }
-            },
-            async sendCode(code: string) {
-                await store.dispatch("machine/sendCode", code);
             },
             async updateItem(item: any, stateName: string, code: string | null = null) {
                 this.$set(item, stateName, true);
