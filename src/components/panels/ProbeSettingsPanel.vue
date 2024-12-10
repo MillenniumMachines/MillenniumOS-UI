@@ -76,28 +76,30 @@
                                         <v-input
                                             :prepend-icon="setting.icon"
                                         >
-                                            <v-btn-toggle
+                                            <v-chip-group
                                                     v-model="setting.value"
                                                     mandatory
-                                                    class="ml-4"
+                                                    column
+                                                    class="ml-4 px-0 py-0"
                                                     >
                                                 <v-tooltip v-for="(option, i) in setting.options" :key="i" top>
                                                     <template v-slot:activator="{ on, attrs }">
-                                                        <v-btn
+                                                        <v-chip
                                                             v-on="on"
                                                             :key="i"
                                                             :value="i"
                                                             :color="getEnumColor(i, setting.value)"
                                                             :disabled="!allowInput(name)"
-                                                            small
+                                                            label
+                                                            class="mt-0 mb-0"
                                                             >
                                                             <v-icon>{{ getEnumIcon(option) }}</v-icon>
                                                             {{ getEnumText(option) }}
-                                                        </v-btn>
+                                                        </v-chip>
                                                     </template>
                                                     <span>{{ getEnumText(option) }}</span>
                                                 </v-tooltip>
-                                            </v-btn-toggle>
+                                            </v-chip-group>
                                         </v-input>
                                     </v-col>
                                     <v-col cols="4" md="2" class="text-right">
