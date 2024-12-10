@@ -188,8 +188,9 @@ export class ProbeCommand implements IProbeCommand {
                 continue;
             }
 
-            // Dont include settings that are disabled
-            if (setting.condition && setting.conditionValue === false) {
+            // Dont include settings whose conditional setting does
+            // not match the conditionValue.
+            if (setting.condition && this.settings[setting.condition].value !== setting.conditionValue) {
                 continue;
             }
 
@@ -432,7 +433,7 @@ export default {
             'width': {
                 type: 'number',
                 label: 'Width',
-                description: 'The approximate width of the web. This is how far outwards we will move before probing back towards the web surfaces.',
+                description: 'The approximate width of the web. This is how far outwards along the probed axis we will move before probing back towards the web surfaces.',
                 parameter: 'H',
                 icon: 'mdi-unfold-less-vertical',
                 value: 10,
@@ -444,7 +445,7 @@ export default {
             'length': {
                 type: 'number',
                 label: 'Length',
-                description: 'The approximate length of the web surfaces.',
+                description: 'The approximate length of the web surfaces. With quick mode disabled, this is used to calculate the probe locations on the web surfaces.',
                 parameter: 'I',
                 icon: 'mdi-unfold-less-horizontal',
                 value: 10,

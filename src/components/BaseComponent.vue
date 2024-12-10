@@ -54,8 +54,8 @@
             return {}
         },
         methods: {
-            async sendCode(code: string) {
-                await store.dispatch("machine/sendCode", code);
+            async sendCode(code: string): Promise<string> {
+                return await store.dispatch("machine/sendCode", code);
             },
         }
     });

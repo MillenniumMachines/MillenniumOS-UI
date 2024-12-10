@@ -80,7 +80,7 @@
                                                     v-model="setting.value"
                                                     mandatory
                                                     column
-                                                    class="ml-4 px-0 py-0"
+                                                    class="ml-4 px-0 py-0 mt-n3"
                                                     >
                                                 <v-tooltip v-for="(option, i) in setting.options" :key="i" top>
                                                     <template v-slot:activator="{ on, attrs }">
@@ -91,9 +91,10 @@
                                                             :color="getEnumColor(i, setting.value)"
                                                             :disabled="!allowInput(name)"
                                                             label
-                                                            class="mt-0 mb-0"
+                                                            small
+                                                            class="mt-2 mb-0 pl-0 pr-1"
                                                             >
-                                                            <v-icon>{{ getEnumIcon(option) }}</v-icon>
+                                                            <v-icon class="px-0">{{ getEnumIcon(option) }}</v-icon>
                                                             {{ getEnumText(option) }}
                                                         </v-chip>
                                                     </template>
