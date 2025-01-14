@@ -474,6 +474,75 @@ export default {
             [DS_OVERTRAVEL]: valueSettings[DS_OVERTRAVEL]
         }
     },
+    pocket: <ProbeType> {
+        name: 'Pocket',
+        icon: 'mdi-math-norm',
+        description: 'Finds the center of a pocket (negative rectangular feature) on one axis by probing its inner surfaces.',
+        code: 6505.1,
+        settings: {
+            [DS_QUICK]: valueSettings[DS_QUICK],
+            'axis': {
+                type: 'enum',
+                label: 'Axis',
+                description: 'The axis of the pocket.',
+                parameter: 'N',
+                icon: 'mdi-axis-arrow',
+                value: 0,
+                options: [
+                    {
+                        icon: 'mdi-swap-horizontal',
+                        label: 'X'
+                    },
+                    {
+                        icon: 'mdi-swap-vertical',
+                        label: 'Y'
+                    }
+                ]
+            },
+            'width': {
+                type: 'number',
+                label: 'Width',
+                description: 'The approximate width of the pocket. This defines how far outwards we expect the probed surfaces to be from the start point, minus the clearance distance.',
+                parameter: 'H',
+                icon: 'mdi-unfold-less-vertical',
+                value: 10,
+                min: 0,
+                max: 300,
+                step: 0.1,
+                unit: 'mm',
+            },
+            'length': {
+                type: 'number',
+                label: 'Length',
+                description: 'The approximate length of the pocket surfaces. With quick mode disabled, this is used to calculate the probe locations on the pocket surfaces.',
+                parameter: 'I',
+                icon: 'mdi-unfold-less-horizontal',
+                value: 10,
+                min: 0,
+                max: 300,
+                step: 0.1,
+                unit: 'mm',
+                condition: 'quick',
+                conditionValue: false,
+            },
+            'depth': {
+                type: 'number',
+                label: 'Depth (from starting position)',
+                description: 'How far to move down from the starting position before probing.',
+                parameter: 'Z',
+                icon: 'mdi-arrow-down-bold-circle',
+                value: 5,
+                min: 0,
+                max: 20,
+                multiplier: -1,
+                step: 0.1,
+                unit: 'mm'
+            },
+            [DS_SURFACE_CLEARANCE]: valueSettings[DS_SURFACE_CLEARANCE],
+            [DS_EDGE_CLEARANCE]: valueSettings[DS_EDGE_CLEARANCE],
+            [DS_OVERTRAVEL]: valueSettings[DS_OVERTRAVEL]
+        }
+    },
     outsideCorner: <ProbeType> {
         name: 'Outside Corner',
         icon: 'mdi-square-rounded-badge',
