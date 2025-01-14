@@ -306,7 +306,14 @@ export default defineComponent({
             this.probing = true;
             await this.sendCode("M5012");
             this.nextStep();
-            await this.sendCode([this.getProbeCode(), "M5012"].join("\n"));
+            const reply = await this.sendCode(this.getProbeCode());
+
+            if(reply.length > 0) {
+                this.tab = (this.probeActive ? 1 : 0);
+                this.probing = false;
+            }
+
+            await this.sendCode("M5012");
         },
     },
     mounted() {

@@ -1,12 +1,23 @@
 const DS_OVERTRAVEL = 'overtravel';
 const DS_SURFACE_CLEARANCE = 'surface-clearance';
+const DS_EDGE_CLEARANCE = 'edge-clearance';
 const DS_CORNER_CLEARANCE = 'corner-clearance';
+const DS_QUICK = 'quick';
 
 export const valueSettings = {
+
+    [DS_QUICK]: {
+        type: 'boolean',
+        label: 'Quick Mode',
+        description: 'If enabled, only a single probe point will be performed on each surface. Angle calculations will not be performed. Turn this off for more accurate probe results.',
+        parameter: 'Q',
+        icon: 'mdi-clock-fast',
+        value: true,
+    },
     [DS_OVERTRAVEL]: {
         type: 'number',
         label: 'Overtravel',
-        description: 'The distance the probe will travel past the expected edge of the workpiece, to account for inaccuracies in the starting position or feature dimensions.',
+        description: 'The distance the probe will travel past the expected edge of the feature or workpiece, to account for inaccuracies in the starting position or feature dimensions.',
         parameter: 'O',
         icon: 'mdi-unfold-less-vertical',
         value: 2,
@@ -18,7 +29,7 @@ export const valueSettings = {
     [DS_SURFACE_CLEARANCE]: {
         type: 'number',
         label: 'Surface Clearance',
-        description: 'The distance the probe will move inwards towards the expected surface of the workpiece, to account for inaccuracies in the starting position or work holding.',
+        description: 'The distance the probe will move inwards towards the expected surface of the feature or workpiece, to account for inaccuracies in the starting position or work holding.',
         parameter: 'T',
         icon: 'mdi-unfold-more-vertical',
         value: 10,
@@ -30,7 +41,7 @@ export const valueSettings = {
     [DS_CORNER_CLEARANCE]: {
         type: 'number',
         label: 'Corner Clearance',
-        description: 'The distance the probe will move inwards from the expected corner of the workpiece, to account for inaccuracies in the starting position or corner radiuses.',
+        description: 'The distance the probe will move inwards from the expected corner of the feature or workpiece, to account for inaccuracies in the starting position or corner radiuses.',
         parameter: 'C',
         icon: 'mdi-unfold-more-horizontal',
         value: 5,
@@ -38,6 +49,20 @@ export const valueSettings = {
         max: 50,
         step: 0.1,
         unit: 'mm'
+    },
+    [DS_EDGE_CLEARANCE]: {
+        type: 'number',
+        label: 'Edge Clearance',
+        description: 'The distance the probe will move inwards from the expected edge of the feature or workpiece, to account for inaccuracies in the starting position.',
+        parameter: 'C',
+        icon: 'mdi-unfold-more-horizontal',
+        value: 5,
+        min: 1,
+        max: 50,
+        step: 0.1,
+        unit: 'mm',
+        condition: 'quick',
+        conditionValue: false,
     }
 };
 
@@ -160,6 +185,12 @@ export class ProbeCommand implements IProbeCommand {
 
             // Dont include settings without a parameter
             if (setting.parameter === undefined) {
+                continue;
+            }
+
+            // Dont include settings whose conditional setting does
+            // not match the conditionValue.
+            if (setting.condition && this.settings[setting.condition].value !== setting.conditionValue) {
                 continue;
             }
 
@@ -374,6 +405,144 @@ export default {
             [DS_OVERTRAVEL]: valueSettings[DS_OVERTRAVEL]
         },
     },
+    web: <ProbeType> {
+        name: 'Web',
+        icon: 'mdi-math-norm-box',
+        description: 'Finds the center of a web (positive rectangular feature) on one axis by probing its outer surfaces.',
+        code: 6504.1,
+        settings: {
+            [DS_QUICK]: valueSettings[DS_QUICK],
+            'axis': {
+                type: 'enum',
+                label: 'Axis',
+                description: 'The axis of the web.',
+                parameter: 'N',
+                icon: 'mdi-axis-arrow',
+                value: 0,
+                options: [
+                    {
+                        icon: 'mdi-swap-horizontal',
+                        label: 'X'
+                    },
+                    {
+                        icon: 'mdi-swap-vertical',
+                        label: 'Y'
+                    }
+                ]
+            },
+            'width': {
+                type: 'number',
+                label: 'Width',
+                description: 'The approximate width of the web. This is how far outwards along the probed axis we will move before probing back towards the web surfaces.',
+                parameter: 'H',
+                icon: 'mdi-unfold-less-vertical',
+                value: 10,
+                min: 0,
+                max: 300,
+                step: 0.1,
+                unit: 'mm',
+            },
+            'length': {
+                type: 'number',
+                label: 'Length',
+                description: 'The approximate length of the web surfaces. With quick mode disabled, this is used to calculate the probe locations on the web surfaces.',
+                parameter: 'I',
+                icon: 'mdi-unfold-less-horizontal',
+                value: 10,
+                min: 0,
+                max: 300,
+                step: 0.1,
+                unit: 'mm',
+                condition: 'quick',
+                conditionValue: false,
+            },
+            'depth': {
+                type: 'number',
+                label: 'Depth (from starting position)',
+                description: 'How far to move down from the starting position before probing.',
+                parameter: 'Z',
+                icon: 'mdi-arrow-down-bold-circle',
+                value: 5,
+                min: 0,
+                max: 20,
+                multiplier: -1,
+                step: 0.1,
+                unit: 'mm'
+            },
+            [DS_SURFACE_CLEARANCE]: valueSettings[DS_SURFACE_CLEARANCE],
+            [DS_EDGE_CLEARANCE]: valueSettings[DS_EDGE_CLEARANCE],
+            [DS_OVERTRAVEL]: valueSettings[DS_OVERTRAVEL]
+        }
+    },
+    pocket: <ProbeType> {
+        name: 'Pocket',
+        icon: 'mdi-math-norm',
+        description: 'Finds the center of a pocket (negative rectangular feature) on one axis by probing its inner surfaces.',
+        code: 6505.1,
+        settings: {
+            [DS_QUICK]: valueSettings[DS_QUICK],
+            'axis': {
+                type: 'enum',
+                label: 'Axis',
+                description: 'The axis of the pocket.',
+                parameter: 'N',
+                icon: 'mdi-axis-arrow',
+                value: 0,
+                options: [
+                    {
+                        icon: 'mdi-swap-horizontal',
+                        label: 'X'
+                    },
+                    {
+                        icon: 'mdi-swap-vertical',
+                        label: 'Y'
+                    }
+                ]
+            },
+            'width': {
+                type: 'number',
+                label: 'Width',
+                description: 'The approximate width of the pocket. This defines how far outwards we expect the probed surfaces to be from the start point, minus the clearance distance.',
+                parameter: 'H',
+                icon: 'mdi-unfold-less-vertical',
+                value: 10,
+                min: 0,
+                max: 300,
+                step: 0.1,
+                unit: 'mm',
+            },
+            'length': {
+                type: 'number',
+                label: 'Length',
+                description: 'The approximate length of the pocket surfaces. With quick mode disabled, this is used to calculate the probe locations on the pocket surfaces.',
+                parameter: 'I',
+                icon: 'mdi-unfold-less-horizontal',
+                value: 10,
+                min: 0,
+                max: 300,
+                step: 0.1,
+                unit: 'mm',
+                condition: 'quick',
+                conditionValue: false,
+            },
+            'depth': {
+                type: 'number',
+                label: 'Depth (from starting position)',
+                description: 'How far to move down from the starting position before probing.',
+                parameter: 'Z',
+                icon: 'mdi-arrow-down-bold-circle',
+                value: 5,
+                min: 0,
+                max: 20,
+                multiplier: -1,
+                step: 0.1,
+                unit: 'mm'
+            },
+            [DS_SURFACE_CLEARANCE]: valueSettings[DS_SURFACE_CLEARANCE],
+            [DS_EDGE_CLEARANCE]: valueSettings[DS_EDGE_CLEARANCE],
+            [DS_OVERTRAVEL]: valueSettings[DS_OVERTRAVEL]
+        }
+    },
     outsideCorner: <ProbeType> {
         name: 'Outside Corner',
         icon: 'mdi-square-rounded-badge',
@@ -381,14 +550,7 @@ export default {
         code: 6508.1,
         // G6508.1 W{var.workOffset} Q{var.mode} H{var.xSL} I{var.ySL} N{var.cnr} T{var.SurfaceClearance} C{var.cornerClearance} O{var.overtravel} J{global.mosMI[0]} K{global.mosMI[1]} L{global.mosMI[2] - var.probingDepth}
         settings: {
-            'quick': {
-                type: 'boolean',
-                label: 'Quick Mode',
-                description: 'If enabled, only a single probe point will be performed on the surfaces forming the corner. Rotation compensation will not be available.',
-                parameter: 'Q',
-                icon: 'mdi-clock-fast',
-                value: false
-            },
+            [DS_QUICK]: { ...valueSettings[DS_QUICK], value: false },
             'corner': {
                 type: 'enum',
                 label: 'Corner',
@@ -467,14 +629,7 @@ export default {
         description: 'Finds the top and corner of a positive feature or workpiece by probing its top and outer surfaces.',
         code: 6520.1,
         settings: {
-            'quick': {
-                type: 'boolean',
-                label: 'Quick Mode',
-                description: 'If enabled, only a single probe point will be performed on the surfaces forming the corner. Rotation compensation will not be available.',
-                parameter: 'Q',
-                icon: 'mdi-clock-fast',
-                value: false
-            },
+            [DS_QUICK]: valueSettings[DS_QUICK],
             'corner': {
                 type: 'enum',
                 label: 'Corner',

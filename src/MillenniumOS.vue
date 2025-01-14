@@ -24,11 +24,12 @@
                 <mos-job-progress-panel class="mb-2" />
             </v-col>
         </v-row> -->
+
         <v-row>
-            <v-col cols="9" class="pb-0">
+            <v-col cols="8" class="pb-0">
                 <mos-probing-panel class="mb-2 fill-height" />
             </v-col>
-            <v-col cols="3" class="pb-0">
+            <v-col cols="4" class="pb-0">
                 <mos-workplace-origins-panel class="mb-2 fill-height" />
             </v-col>
         </v-row>

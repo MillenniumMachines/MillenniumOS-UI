@@ -5,7 +5,7 @@
     .v-data-table >>> .v-data-table__wrapper > table > thead > tr > th,
     .v-data-table >>> .v-data-table__wrapper > table > tfoot > tr > td,
     .v-data-table >>> .v-data-table__wrapper > table > tfoot > tr > th {
-    padding: 0 2px;
+    padding: 0 8px;
     }
 </style>
 <template>
@@ -106,6 +106,16 @@
             visibleAxesLetters(): Array<string> {
                 return this.visibleAxes.map(axis => axis.letter);
             },
+            axisHeaders(): Array<any> {
+                return this.visibleAxes.map(axis => ({
+                    text: axis.letter,
+                    value: axis.letter,
+                    align: 'center',
+                }));
+            },
+            headers(): Array<any> {
+                return this.headersPrepend.concat(this.axisHeaders, this.headersAppend);
+            },
             items(): Array<any> {
                 const workplaces = store.state.machine.model.limits?.workplaces ?? 0;
                 return Array.from({ length: workplaces }, (_, w) => {
@@ -126,7 +136,7 @@
         data() {
             return {
                 selectedWorkplace: -1,
-                headers: [{
+                headersPrepend: [{
                     text: 'Workplace',
                     value: 'workplace',
                     align: 'start',
@@ -134,11 +144,8 @@
                     text: this.$t('plugins.millenniumos.panels.workplaceOrigins.activeHeader'),
                     value: 'active',
                     align: 'center',
-                }, ...store.state.machine.model.move.axes.map(axis => ({
-                    text: axis.letter,
-                    value: axis.letter,
-                    align: 'center',
-                })), {
+                }],
+                headersAppend: [{
                     text: '',
                     value: 'actions',
                     align: 'end',
