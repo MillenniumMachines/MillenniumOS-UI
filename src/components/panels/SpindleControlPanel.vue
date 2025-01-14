@@ -45,6 +45,7 @@ export default defineComponent({
 	},
 	methods: {
 		spindleIcon(spindle: Spindle) {
+			if(spindle.current === null) return 'mdi-help';
 			return (spindle.current > 0) ? 'mdi-axis-z-rotate-clockwise' : (spindle.current < 0) ? 'mdi-axis-z-rotate-counterclockwise' : 'mdi-pause';
 		}
 	}
