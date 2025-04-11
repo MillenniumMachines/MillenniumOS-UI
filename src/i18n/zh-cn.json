@@ -1,0 +1,86 @@
+{
+  "language": "简体中文",
+  "menuCaption": "MillenniumOS-translater by Jingyuan Wang",
+  "probeTypes": {
+    "boss": {
+      "menuName": "圆台",
+      "fullName": "圆台检测",
+      "description": "探测一个圆台特征."
+    },
+    "bore": {
+      "menuName": "圆孔",
+      "fullName": "圆孔检测",
+      "description": "探测一个圆孔特征."
+    },
+    "rectanglePocket": {
+      "menuName": "矩形孔洞",
+      "fullName": "矩形孔洞检测",
+      "description": "探测一个矩形孔洞特征."
+    },
+    "rectangleBlock": {
+      "menuName": "矩形块",
+      "fullName": "矩形块检测",
+      "description": "探测一个矩形凸台特征."
+    },
+    "outsideCorner": {
+      "menuName": "外角",
+      "fullName": "外角检测",
+      "description": "探测凸台的外角特征."
+    },
+    "viseCorner": {
+      "menuName": "角",
+      "fullName": "角检测",
+      "description": "探测凸台外角的顶部和侧面特征(三棱边交点)."
+    },
+    "singleSurface": {
+      "menuName": "单面",
+      "fullName": "单面检测",
+      "description": "探测单一表面特征."
+    }
+  },
+  "probeSettings": {
+    "booleanEnabled": "启用",
+    "booleanDisabled": "禁用"
+  },
+  "panels": {
+    "axesPosition": {
+      "positionHeader": "位置",
+      "notHomed": "轴 {0} 未归位",
+      "homed": "轴 {0} 已归位",
+      "atStop": "轴 {0} 限位已触发"
+    },
+    "cncStatus": {
+      "touchProbe": "触碰探针",
+      "toolsetter": "刀具设置器",
+      "toolRadius": "刀具半径",
+      "toolOffset": "刀具偏移",
+      "toolName": "刀具",
+      "probeNotTriggered": "未触发 / {0}",
+      "probeTriggered": "触发 / {0}",
+      "probeDisabled": "禁用",
+      "rotationCompensation": "旋转补偿.",
+      "workplaceValid": "坐标系 {0} 在所有轴上未设定非零原点",
+      "workplacePartial": "坐标系 {0} 在某个轴上未设定非零原点",
+      "workplaceInvalid": "坐标系 {0} 无非零原点设定"
+    },
+    "cncMovement": {
+      "protectionState": {
+        "enabled": "启用避让 (探针 {0})",
+        "disabled": "禁用避让"
+      },
+      "protectionProbeDescription": "探针 {0}: {1} ({2} {3})",
+      "protectionProbeDisable": "禁用避让 ({0} {1})",
+      "protectionProbeNone": "未配置合适的探针"
+    },
+    "workplaceOrigins": {
+      "cardTitle": "坐标系原点",
+      "resetAction": "重设坐标系 {0}",
+      "workplaceHeader": "坐标系",
+      "activeHeader": "激活",
+      "actionsHeader": ""
+    },
+    "jobCode": {
+      "cardTitle": "任务代码"
+    }
+  }
+}
