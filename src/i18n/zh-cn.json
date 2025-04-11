@@ -1,86 +1,86 @@
 {
-  "language": "English",
+  "language": "简体中文",
   "menuCaption": "MillenniumOS",
   "probeTypes": {
     "boss": {
-      "menuName": "Boss",
-      "fullName": "Boss Probe",
-      "description": "Probe a circular positive feature."
+      "menuName": "圆台",
+      "fullName": "圆台检测",
+      "description": "探测一个圆台特征."
     },
     "bore": {
-      "menuName": "Bore",
-      "fullName": "Bore Probe",
-      "description": "Probe a circular negative feature."
+      "menuName": "圆孔",
+      "fullName": "圆孔检测",
+      "description": "探测一个圆孔特征."
     },
     "rectanglePocket": {
-      "menuName": "Rectangle Pocket",
-      "fullName": "Rectangle Pocket Probe",
-      "description": "Probe a rectangular negative feature."
+      "menuName": "矩形孔洞",
+      "fullName": "矩形孔洞检测",
+      "description": "探测一个矩形孔洞特征."
     },
     "rectangleBlock": {
-      "menuName": "Rectangle Block",
-      "fullName": "Rectangle Block Probe",
-      "description": "Probe a rectangular positive feature."
+      "menuName": "矩形块",
+      "fullName": "矩形块检测",
+      "description": "探测一个矩形凸台特征."
     },
     "outsideCorner": {
-      "menuName": "Outside Corner",
-      "fullName": "Outside Corner Probe",
-      "description": "Probe an outside corner of a positive feature."
+      "menuName": "外角",
+      "fullName": "外角检测",
+      "description": "探测凸台的外角特征."
     },
     "viseCorner": {
-      "menuName": "Vise Corner",
-      "fullName": "Vise Corner Probe",
-      "description": "Probe the top and sides of an outside corner of a positive feature."
+      "menuName": "角",
+      "fullName": "角检测",
+      "description": "探测凸台外角的顶部和侧面特征(三棱边交点)."
     },
     "singleSurface": {
-      "menuName": "Single Surface",
-      "fullName": "Single Surface Probe",
-      "description": "Probe a single surface of a feature."
+      "menuName": "单面",
+      "fullName": "单面检测",
+      "description": "探测单一表面特征."
     }
   },
   "probeSettings": {
-    "booleanEnabled": "Enabled",
-    "booleanDisabled": "Disabled"
+    "booleanEnabled": "启用",
+    "booleanDisabled": "禁用"
   },
   "panels": {
     "axesPosition": {
-      "positionHeader": "Position",
-      "notHomed": "Axis {0} is not homed",
-      "homed": "Axis {0} is homed",
-      "atStop": "Axis {0} endstop is triggered"
+      "positionHeader": "位置",
+      "notHomed": "轴 {0} 未归位",
+      "homed": "轴 {0} 已归位",
+      "atStop": "轴 {0} 限位已触发"
     },
     "cncStatus": {
-      "touchProbe": "Touch Probe",
-      "toolsetter": "Toolsetter",
-      "toolRadius": "Tool Radius",
-      "toolOffset": "Tool Offset",
-      "toolName": "Tool",
-      "probeNotTriggered": "Not Triggered / {0}",
-      "probeTriggered": "Triggered / {0}",
-      "probeDisabled": "Disabled",
-      "rotationCompensation": "Rotation Comp.",
-      "workplaceValid": "Workplace {0} has a non-zero origin set on all axes",
-      "workplacePartial": "Workplace {0} has a non-zero origin set on some axes",
-      "workplaceInvalid": "Workplace {0} has no origins set"
+      "touchProbe": "触碰探针",
+      "toolsetter": "刀具设置器",
+      "toolRadius": "刀具半径",
+      "toolOffset": "刀具偏移",
+      "toolName": "刀具",
+      "probeNotTriggered": "未触发 / {0}",
+      "probeTriggered": "触发 / {0}",
+      "probeDisabled": "禁用",
+      "rotationCompensation": "旋转补偿.",
+      "workplaceValid": "坐标系 {0} 在所有轴上未设定非零原点",
+      "workplacePartial": "坐标系 {0} 在某个轴上未设定非零原点",
+      "workplaceInvalid": "坐标系 {0} 无非零原点设定"
     },
     "cncMovement": {
       "protectionState": {
-        "enabled": "Protected Moves Enabled (Probe {0})",
-        "disabled": "Protected Moves Disabled"
+        "enabled": "启用避让 (探针 {0})",
+        "disabled": "禁用避让"
       },
-      "protectionProbeDescription": "Probe {0}: {1} ({2} {3})",
-      "protectionProbeDisable": "Disable Protected Moves ({0} {1})",
-      "protectionProbeNone": "No suitable probes are configured"
+      "protectionProbeDescription": "探针 {0}: {1} ({2} {3})",
+      "protectionProbeDisable": "禁用避让 ({0} {1})",
+      "protectionProbeNone": "未配置合适的探针"
     },
     "workplaceOrigins": {
-      "cardTitle": "Workplace Origins",
-      "resetAction": "Reset workplace {0}",
-      "workplaceHeader": "Workplace",
-      "activeHeader": "Active",
+      "cardTitle": "坐标系原点",
+      "resetAction": "重设坐标系 {0}",
+      "workplaceHeader": "坐标系",
+      "activeHeader": "激活",
       "actionsHeader": ""
     },
     "jobCode": {
-      "cardTitle": "Job Code"
+      "cardTitle": "任务代码"
     }
   }
 }
